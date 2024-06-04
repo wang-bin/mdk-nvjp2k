@@ -6,7 +6,26 @@ cmake_minimum_required(VERSION 3.17 FATAL_ERROR)
 project(mdk-nvjp2k VERSION 0.28.0 DESCRIPTION "mdk nvJPEG2000 plugin")
 set(PROJECT_VERSION_TWEAK 0)
 
-find_package(CUDAToolkit)
+if(EXISTS ${CUDA_SDK_DIR}/include/cuda.h)
+  set(CUDAToolkit_VERSION_MAJOR 12)
+  find_library(CUDA_CUDART
+    NAMES cudart
+    PATHS ${CUDA_SDK_DIR}
+    PATH_SUFFIXES lib64 lib/x64 lib64/stubs lib/x64/stubs lib/stubs stubs
+    )
+  if(NOT CUDA_CUDART)
+    message(FATAL_ERROR, "cudart not found")
+  endif()
+  add_library(CUDA::cudart UNKNOWN IMPORTED)
+  target_include_directories(CUDA::cudart INTERFACE ${CUDA_SDK_DIR}/include)
+  set_property(TARGET CUDA::cudart PROPERTY IMPORTED_LOCATION ${CUDA_CUDART})
+else()
+  find_package(CUDAToolkit)
+endif()
+if(NOT CUDAToolkit_VERSION_MAJOR)
+  message(FATAL_ERROR, "CUDA Toolkit not found. Make sure the toolkit is installed and the environment is set up correctly.")
+endif()
+message("CUDA_CUDART: ${CUDA_CUDART}")
 
 find_library(NVJPEG2K_LIB
      NAMES nvjpeg2k

@@ -14,9 +14,9 @@
 #include "mdk/Packet.h"
 #include "mdk/VideoFrame.h"
 #include <cmath>
+#include <format>
 #include <iostream>
 #include <vector>
-#include "base/log.h"
 
 #include <cuda_runtime_api.h>
 #include <nvjpeg2k.h>
@@ -28,7 +28,7 @@ using namespace std;
 #define NVJP2K_RUN(EXPR, ...) do { \
         const auto nvjp2k_ret__ = (EXPR); \
         if (nvjp2k_ret__ != NVJPEG2K_STATUS_SUCCESS) { \
-            std::clog << fmt::to_string("nvJPEG2000 ERROR@%d %s " #EXPR " : %d", __LINE__, __func__, nvjp2k_ret__) << std::endl << std::flush; \
+            std::clog << std::format("nvJPEG2000 ERROR@{} {} " #EXPR " : {}", __LINE__, __func__, (int)nvjp2k_ret__) << std::endl << std::flush; \
             __VA_ARGS__; \
         } \
     } while (false)
@@ -39,7 +39,7 @@ using namespace std;
 #define CUDA_RUN(EXPR, ...)  do { \
         const cudaError_t cuda_err_ = (EXPR);  \
         if (cuda_err_ != cudaSuccess) {  \
-            std::clog << fmt::to_string("CUDA runtime ERROR@%d %s " #EXPR " : (%d) %s", __LINE__, __func__, cuda_err_, cudaGetErrorString(cuda_err_)) << std::endl << std::flush; \
+            std::clog << std::format("CUDA runtime ERROR@{} {} " #EXPR " : ({}) {}", __LINE__, __func__, (int)cuda_err_, cudaGetErrorString(cuda_err_)) << std::endl << std::flush; \
             __VA_ARGS__; \
         }  \
     } while (false)
@@ -81,9 +81,9 @@ bool nvJp2kDecoder::open()
     NVJP2K_ENSURE(nvjpeg2kGetCudartProperty(libraryPropertyType::MAJOR_VERSION, &cuver[0]), false);
     NVJP2K_ENSURE(nvjpeg2kGetCudartProperty(libraryPropertyType::MINOR_VERSION, &cuver[1]), false);
     NVJP2K_ENSURE(nvjpeg2kGetCudartProperty(libraryPropertyType::PATCH_LEVEL, &cuver[2]), false);
-    clog << fmt::to_string("nvjpeg2k version: %d.%d.%d.%d/%d.%d.%d, cudart: %d.%d.%d"
+    clog << std::format("nvjpeg2k version: {}.{}.{}.{}/{}.{}.{}, cudart: {}/{}.{}.{}"
         , NVJPEG2K_VER_MAJOR, NVJPEG2K_VER_MINOR, NVJPEG2K_VER_PATCH, NVJPEG2K_VER_BUILD
-        , ver[0], ver[1], ver[2], cuver[0], cuver[1], cuver[2]) << endl;
+        , ver[0], ver[1], ver[2], CUDART_VERSION, cuver[0], cuver[1], cuver[2]) << endl;
 
     fmt_ = parameters().format;
     const auto rgb = get_or("rgb", "0") == "1";
@@ -161,7 +161,7 @@ int nvJp2kDecoder::decode(const Packet& pkt)
             img_.pixel_data = (void**)data8_;
             img_.pixel_type = NVJPEG2K_UINT8;
         } else {
-            clog << fmt::to_string("nvjp2k unsupported precision: %d", comp_info[0].precision) << endl;
+            clog << std::format("nvjp2k unsupported precision: {}", comp_info[0].precision) << endl;
             return -1;
         }
         if (packed_) { // ?

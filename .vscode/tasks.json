@@ -1,0 +1,49 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    //"runner": "terminal",
+    "command": "cmake",
+    //"isShellCommand": true,
+    "options": {
+        "env":{
+            "NINJA_STATUS": "[%f/%t %e %r %s]"
+        }
+    },
+    "tasks": [
+        {
+            "label": "config.vs2022x64",
+            "args": [
+                "-DCMAKE_BUILD_TYPE=RelWithDebInfo",
+                "-H${workspaceRoot}",
+                "-B${workspaceRoot}/build/vs2022x64",
+                "-G",
+                "Visual Studio 17 2022",
+                "-A",
+                "x64",
+                "-DMIN_SIZE=1",
+                "-DCMAKE_SYSTEM_VERSION=6.0",
+//                "-DMDKSDK=${workspaceRoot}/mdk-sdk",
+                "-DCUDA_SDK_DIR=${workspaceRoot}/cuda",
+                "-DNVJPEG2K_PATH=${workspaceRoot}/nvjpeg2000",
+    //            "-DCMAKE_RUNTIME_OUTPUT_DIRECTORY=${workspaceRoot}/build/vs2022x64/bin",
+                "-DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreadedDLL",
+                "-DCMAKE_VS_JUST_MY_CODE_DEBUGGING=1"
+            ],
+            "problemMatcher": []
+        },
+        {
+            "label": "build.vs2022x64",
+            "command": "cmake",
+            "args": [
+                "--build",
+                "${workspaceRoot}/build/vs2022x64",
+                "--",
+                "-m",
+                "-p:Configuration=RelWithDebInfo"
+            ],
+            "group": "build",
+            "problemMatcher": []
+        },
+    ],
+}
