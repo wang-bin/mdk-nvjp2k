@@ -3,7 +3,7 @@
 
 cmake_minimum_required(VERSION 3.17 FATAL_ERROR)
 
-project(mdk-nvjp2k VERSION 0.28.0 DESCRIPTION "mdk nvJPEG2000 plugin")
+project(mdk-nvjp2k VERSION 0.29.1 DESCRIPTION "mdk nvJPEG2000 plugin")
 set(PROJECT_VERSION_TWEAK 0)
 
 if(EXISTS ${CUDA_SDK_DIR}/include/cuda.h)
@@ -46,7 +46,7 @@ if(NOT CMAKE_PROJECT_NAME STREQUAL mdk) # not build in source tree
 endif()
 find_package(MDK)
 
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
