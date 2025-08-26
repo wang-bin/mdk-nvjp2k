@@ -1,9 +1,10 @@
 #
 # This software contains source code provided by NVIDIA Corporation.
 
+# requires cudart64_12.dll, nvjpeg2k_0.dll
 cmake_minimum_required(VERSION 3.17 FATAL_ERROR)
 
-project(mdk-nvjp2k VERSION 0.29.1 DESCRIPTION "mdk nvJPEG2000 plugin")
+project(mdk-nvjp2k VERSION 0.33.2 DESCRIPTION "mdk nvJPEG2000 plugin")
 set(PROJECT_VERSION_TWEAK 0)
 
 if(EXISTS ${CUDA_SDK_DIR}/include/cuda.h)

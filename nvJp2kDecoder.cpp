@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 WangBin <wbsecg1 at gmail.com>
+ * Copyright (c) 2024-2025 WangBin <wbsecg1 at gmail.com>
  * This file is part of MDK
  * MDK SDK: https://github.com/wang-bin/mdk-sdk
  * Free for opensource softwares or non-commercial use.
@@ -197,15 +197,11 @@ int nvJp2kDecoder::decode(const Packet& pkt)
     frameDecoded(std::move(frame));
     return 0;
 }
-
-static void register_video_decoders_nvjp2k() {
-    VideoDecoder::registerOnce("nvjp2k", []{return new nvJp2kDecoder();});
-}
 MDK_NS_END
 
 // project name must be nvjp2k or mdk-nvjp2k
 MDK_PLUGIN(nvjp2k) {
     using namespace MDK_NS;
-    register_video_decoders_nvjp2k();
+    VideoDecoder::registerOnce("nvjp2k", []{return new nvJp2kDecoder();});
     return MDK_ABI_VERSION;
 }
