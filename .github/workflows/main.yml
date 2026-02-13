@@ -32,11 +32,11 @@ jobs:
       #
       # To add more build types (Release, Debug, RelWithDebInfo, etc.) customize the build_type list.
       matrix:
-        os: [windows-latest] #, ubuntu-latest]
+        os: [windows-2025-vs2026] #, ubuntu-latest]
         include:
-          - os: windows-latest
-            artifact: vs2022-windows-desktop-RelWithDebInfo
-            sdk: windows-desktop-vs2022.7z
+          - os: windows-2025-vs2026
+            artifact: vs2026-windows-desktop-RelWithDebInfo
+            sdk: windows-desktop-vs2026.7z
 
     steps:
     - uses: actions/checkout@v4
@@ -89,7 +89,7 @@ jobs:
 
     - uses: seanmiddleditch/gha-setup-ninja@master
     - uses: ilammy/msvc-dev-cmd@v1
-      if: matrix.os == 'windows-latest'
+      if: matrix.os == 'windows-2025-vs2026'
       with:
         arch: x64
     - name: Configure CMake
